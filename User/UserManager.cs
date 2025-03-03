@@ -9,10 +9,10 @@ namespace Cyber_Awareness_Chatbot.User
 {
     class UserManager
     {
+        // Initialise the value of user to null.
+        public string? User { get; set; } = null;
         public string GetUsersName ()
         {
-            // Initialise the value of user to null.
-            string? User = null;
 
             // Keep asking the user for their name until it is valid.
             while (NameValid(User))
