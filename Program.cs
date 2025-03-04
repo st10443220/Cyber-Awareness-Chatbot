@@ -23,6 +23,7 @@ namespace Cyber_Awareness_Chatbot
             // Prompt user for their name for a customised experience.
             user.GetUsersName();
 
+            // Start the chat with the user
             interaction.Chat();
 
             Console.ReadKey();
