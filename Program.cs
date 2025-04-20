@@ -1,6 +1,5 @@
 ﻿using Cyber_Awareness_Chatbot.Audio;
 using Cyber_Awareness_Chatbot.Interaction;
-using Cyber_Awareness_Chatbot.Properties;
 using Cyber_Awareness_Chatbot.User;
 
 namespace Cyber_Awareness_Chatbot
@@ -16,8 +15,6 @@ namespace Cyber_Awareness_Chatbot
             audio.PlayWelcomeMessage();
 
             // Display the ASCII art upon launch.
-            //Console.WriteLine(Resources.hacker_logo);
-
             interaction.DisplayBanner();
 
             // Prompt user for their name for a customised experience.

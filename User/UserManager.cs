@@ -1,36 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
+﻿using Cyber_Awareness_Chatbot.Properties;
 
 namespace Cyber_Awareness_Chatbot.User
 {
     class UserManager
     {
+        private string? _username;
         // Initialise the value of user to null.
-        public string? User { get; set; } = null;
-        public string GetUsersName ()
+        public string? Username
         {
-
-            // Keep asking the user for their name until it is valid.
-            while (NameValid(User))
+            get
             {
-                // Prompts the user for their name, while ensuring an "error" is said if they enter a null value.
-                Console.Write($"{(!NameValid(User) ? "No name was entered!\n" : "")}Please provide your name for a more customised experience: ");
-                User = Console.ReadLine();
+                return _username;
+            }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("No valid name was entered! Please try again.");
+                    Console.ResetColor();
+                    return;
+                }
+
+                if (Resources.curse_words.Split(',').Any(badword => value == badword))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("You cannot use a curse word as your name!");
+                    Console.ResetColor();
+                    return;
+                }
+
+                _username = value;
+            }
+        }
+
+        public string GetUsersName()
+        {
+            // Keep asking the user for their name until it is valid.
+            while (string.IsNullOrWhiteSpace(this.Username))
+            {
+                // Prompts the user for their name, while ensuring an error message if they enter a null or empty value.
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("Please provide your name for a more customized experience: ");
+                Console.ResetColor();
+
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+                string? input = Console.ReadLine();
+
+                // Here is where if an invalid input will trigger the error line
+                this.Username = input;
+
+                Console.ResetColor();
             }
 
-            // Returns the users name
-            return User;
+            // Returns the user's name
+            // ! tells the compiler that the this.Username is NOT NULL
+            return this.Username!;
         }
-
-        public Boolean NameValid(string? name)
-        {
-            // Returns true if name is null and false if it is valid
-            return (name is null);
-        }
-
     }
 }

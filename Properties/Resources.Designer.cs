@@ -71,7 +71,7 @@ namespace Cyber_Awareness_Chatbot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NHI1ZSw1aDF0LDVoaXQsYTU1LGFuYWwsYW51cyxhcjVlLGFycnNlLGFyc2UsYXNzLGFzcy1mdWNrZXIsYXNzZXMsYXNzZnVja2VyLGFzc2Z1a2thLGFzc2hvbGUsYXNzaG9sZXMsYXNzd2hvbGUsYV9zX3MsYiF0Y2gsYjAwYnMsYjE3Y2gsYjF0Y2gsYmFsbGJhZyxiYWxscyxiYWxsc2FjayxiYXN0YXJkLGJlYXN0aWFsLGJlYXN0aWFsaXR5LGJlbGxlbmQsYmVzdGlhbCxiZXN0aWFsaXR5LGJpK2NoLGJpYXRjaCxiaXRjaCxiaXRjaGVyLGJpdGNoZXJzLGJpdGNoZXMsYml0Y2hpbixiaXRjaGluZyxibG9vZHksYmxvdyBqb2IsYmxvd2pvYixibG93am9icyxib2lvbGFzLGJvbGxvY2ssYm9sbG9rLGJvbmVyLGJvb2IsYm9vYnMsYm9vb2JzLGJvb29vYnMsYm9vb29vYnMsYm9vb29v [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 4r5e,5h1t,5hit,a55,anal,anus,ar5e,arrse,arse,ass,ass-fucker,asses,assfucker,assfukka,asshole,assholes,asswhole,a_s_s,b!tch,b00bs,b17ch,b1tch,ballbag,balls,ballsack,bastard,beastial,beastiality,bellend,bestial,bestiality,bi+ch,biatch,bitch,bitcher,bitchers,bitches,bitchin,bitching,bloody,blow job,blowjob,blowjobs,boiolas,bollock,bollok,boner,boob,boobs,booobs,boooobs,booooobs,booooooobs,breasts,buceta,bugger,bum,bunny fucker,butt,butthole,buttmuch,buttplug,c0ck,c0cksucker,carpet muncher,cawk,chink,cipa,cl1t, [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string curse_words {
             get {
@@ -80,7 +80,7 @@ namespace Cyber_Awareness_Chatbot.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to          _nnnn_                      
+        ///   Looks up a localized string similar to          _nnnn_
         ///        dGGGGMMb     ,&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;&quot;.
         ///       @p~qp~~qMb    | Linux Rules! |
         ///       M|@||@) M|   _;..............&apos;

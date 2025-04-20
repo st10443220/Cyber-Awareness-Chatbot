@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cyber_Awareness_Chatbot.Properties;
+using System.Diagnostics;
 using System.Media;
-using Cyber_Awareness_Chatbot.Properties;
 
 /*
  * https://stackoverflow.com/questions/1900707/how-to-play-audio-from-resource
@@ -22,15 +18,29 @@ namespace Cyber_Awareness_Chatbot.Audio
 
         public void PlayByteArray(Byte[] audio)
         {
-            // Converts the given byte[] to a stream.
-            using (var audioStream = new MemoryStream(audio))
+
+            if (audio == null || audio.Length == 0)
             {
-                // Creates the sound player to play an audio stream.
-                using (var player = new SoundPlayer(audioStream))
+                Debug.WriteLine("AudioManager Error: Attempted to play invalid audio data (null or empty).");
+                return; // Don't proceed if the input is obviously bad
+            }
+
+            try
+            {
+                // Converts the given byte[] to a stream.
+                using (var audioStream = new MemoryStream(audio))
                 {
-                    // Plays the audio stream.
-                    player.Play();
+                    // Creates the sound player to play an audio stream.
+                    using (var player = new SoundPlayer(audioStream))
+                    {
+                        // Plays the audio stream.
+                        player.Play();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"AudioManager Error: Failed to play audio stream. Error: {e.Message}");
             }
         }
     }

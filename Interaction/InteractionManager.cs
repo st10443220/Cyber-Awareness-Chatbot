@@ -1,39 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Cyber_Awareness_Chatbot.Properties;
+﻿using Cyber_Awareness_Chatbot.Properties;
+
+/*
+ * https://www.youtube.com/watch?v=YyD1MRJY0qI
+ */
 
 namespace Cyber_Awareness_Chatbot.Interaction
 {
     class InteractionManager
     {
-        private  List<string> Questions = new()
+        private Dictionary<string, string> Questions = new()
         {
-            "what is phishing?",
-            "how can i spot a scam?",
-            "what is malware?",
-            "what is social engineering?",
-            "how do i recognize a phishing email?",
-            "what are some safe password practices?",
-            "how can i identify a suspicious link?",
-            "hey, how's your day going?",
-            "do you think the internet is safe?",
-            "what's the biggest cybersecurity threat today?"
-        };
-
-        private  List<string> Responses = new()
-        {
-            "Phishing is a cyber attack where scammers impersonate trusted entities to steal personal information. Be cautious of unexpected emails or messages asking for sensitive details, {name}.",
-            "Scams often involve too-good-to-be-true offers, urgent requests for money, or messages from unknown contacts. Always verify sources before taking action!",
-            "Malware is malicious software that can harm your device, steal data, or spy on your activity. Avoid downloading files from unknown sources and keep your security software updated.",
-            "Social engineering is a psychological manipulation tactic used by cybercriminals to trick people into revealing confidential information. Always verify requests for sensitive data, {name}.",
-            "A phishing email often contains urgent or threatening language, unexpected attachments, or links to fake websites. Check the sender’s email address and never click on suspicious links.",
-            "Hey {name}, a strong password should be at least 12 characters long, include a mix of letters, numbers, and symbols, and be unique for each account. And don’t forget to turn on multi-factor authentication!",
-            "A suspicious link may have slight misspellings, strange domain names, or unexpected redirects. Hover over links before clicking to see the actual URL, {name}!",
-            "I’m just a program, but I hope your day is going great, {name}! Stay cyber-safe out there!",
-            "The internet has amazing benefits, but it’s also full of risks. Staying informed and practicing cybersecurity habits makes it much safer!",
-            "Right now, one of the biggest threats is ransomware—attackers lock your files and demand money to restore access. Always keep backups and be cautious of suspicious emails!"
+            { "you", @"Ask me about any of these topics:
+> Phishing
+> Scam
+> Malware
+> Social Engineering
+> Phishing Email
+> Password Safety
+> Suspicious Links
+> Internet Safety
+> Cybersecurity Threats" },{ "help", @"Ask me about any of these topics:
+> Phishing
+> Scam
+> Malware
+> Social Engineering
+> Phishing Email
+> Password Safety
+> Suspicious Links
+> Internet Safety
+> Cybersecurity Threats" },
+            { "phishing", "Phishing is a cyber attack where scammers impersonate trusted entities to steal personal information. Be cautious of unexpected emails or messages asking for sensitive details, {name}." },
+            { "scam", "Scams often involve too-good-to-be-true offers, urgent requests for money, or messages from unknown contacts. Always verify sources before taking action!" },
+            { "malware", "Malware is malicious software that can harm your device, steal data, or spy on your activity. Avoid downloading files from unknown sources and keep your security software updated." },
+            { "social", "Social engineering is a psychological manipulation tactic used by cybercriminals to trick people into revealing confidential information. Always verify requests for sensitive data, {name}." },
+            { "email", "A phishing email often contains urgent or threatening language, unexpected attachments, or links to fake websites. Check the sender’s email address and never click on suspicious links." },
+            { "password", "Hey {name}, a strong password should be at least 12 characters long, include a mix of letters, numbers, and symbols, and be unique for each account. And don’t forget to turn on multi-factor authentication!" },
+            { "link", "A suspicious link may have slight misspellings, strange domain names, or unexpected redirects. Hover over links before clicking to see the actual URL, {name}!" },
+            { "internet", "The internet has amazing benefits, but it’s also full of risks. Staying informed and practicing cybersecurity habits makes it much safer!" },
+            { "threat", "Right now, one of the biggest threats is ransomware—attackers lock your files and demand money to restore access. Always keep backups and be cautious of suspicious emails!" }
         };
 
         private int warningCounter = 0;
@@ -41,17 +45,24 @@ namespace Cyber_Awareness_Chatbot.Interaction
         public void Chat()
         {
             // Receive the user from the main program.
-            string name = Program.user.User;
+            string? name = Program.user?.Username ?? "User";
+
             // Create an exit flag.
             bool exit = false;
 
             // Initialise the conversation with a personal touch.
-            PrintSimulatedResponse($"Hey {name}, hope you are doing well! How can I help you today?", 75, ConsoleColor.White, true);
+            PrintSimulatedResponse($"Hey {name}, hope you are doing well! How can I help you today?", 30, ConsoleColor.White);
+
+            // Simulate a short delay before showing the "help" response
+            Thread.Sleep(500);
+
+            // Display the "help" response at the beginning
+            PrintSimulatedResponse(Questions["help"].Replace("{name}", name), 5, ConsoleColor.Cyan);
 
             // Decoding the curse words, and storing in an array for later use. This is to ensure that their is educational questions.
-            string[] curseWords = Base64Decode(Resources.curse_words).Split(',');
+            string[] curseWords = (Resources.curse_words).Split(',');
 
-            //  Chat loop. Will run until the user wants to exit!
+            // Chat loop. Will run until the user wants to exit!
             while (!exit)
             {
                 // Get the users question, with their font color being blue.
@@ -62,49 +73,72 @@ namespace Cyber_Awareness_Chatbot.Interaction
                 string? question = Console.ReadLine()?.Trim().ToLower();
                 Console.ResetColor();
 
-                // If the string is not null or empty. SO VALID STRING. we can change the "exit" value depending on what the user entered.
-                if (!string.IsNullOrEmpty(question))
-                {
-                    exit = ProcessQuestion(name, question, curseWords);
-                }
+
+                exit = ProcessQuestion(name!, question, curseWords);
             }
         }
 
-        private bool ProcessQuestion(string name, string question, string[] curseWords)
+        private bool ProcessQuestion(string name, string? question, string[] curseWords)
         {
+
+            // If the string is not null or empty. SO VALID STRING. we can change the "exit" value depending on what the user entered.
+            if (string.IsNullOrEmpty(question))
+            {
+                PrintSimulatedResponse($"Please enter a valid question, {name}.", 30, ConsoleColor.Yellow);
+                return false;
+            }
+
+            // Check input length (e.g., max 200 characters)
+            if (question!.Length > 200)
+            {
+                PrintSimulatedResponse($"Input is too long, {name}. Please keep it under 200 characters.", 30, ConsoleColor.Yellow);
+                return false;
+            }
+
+            // Check for invalid characters (e.g., only allow alphanumeric, spaces, and common punctuation)
+            if (!question!.All(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c) || "!?.@#$%^&*()_+-=[]{}|;:,.<>?".Contains(c)))
+            {
+                PrintSimulatedResponse($"Invalid characters detected, {name}. Please use letters, numbers, or common punctuation.", 30, ConsoleColor.Yellow);
+                return false;
+            }
+
             // Cycle through curseWords to see if the question contains any of them.
-            if (curseWords.Any(q => question.Contains(q)))
+            if (curseWords.Any(badword => question.Contains(badword)))
             {
                 // Display the appropriate warning.
                 HandleWarning(name);
                 return false;
             }
 
-            // Get a index of the question inside the Questions list.
-            int location = Questions.IndexOf(question);
-            // If the value is -1 the question asked doesnt exist! So we handle the warning for that here.
-            if (location >= 0)
+
+            // Find the keyword in the user's question
+            string? matchingKey = Questions.Keys.FirstOrDefault(key => question.Contains(key, StringComparison.OrdinalIgnoreCase));
+
+            if (matchingKey != null)
             {
-                // The valid response.
-                PrintSimulatedResponse(Responses[location].Replace("{name}", name), 50, ConsoleColor.Green, true);
+                // Get the response from the Questions dictionary
+                string response = Questions[matchingKey].Replace("{name}", name);
+
+                // Print the response
+                PrintSimulatedResponse(response, 20, ConsoleColor.Green);
+
+                return false;
             }
             else
             {
                 // Check to see if user wants to exit.
                 if (question.Split(" ").Any(text => text == "exit"))
                 {
-                    PrintSimulatedResponse($"It's sad to see you go {name}... But goodluck on your journey and stay cyber safe!", 50, ConsoleColor.Magenta, true);
+                    PrintSimulatedResponse($"It's sad to see you go {name}... But goodluck on your journey and stay cyber safe!", 30, ConsoleColor.Magenta);
                     return true;
                 }
                 else
                 {
                     // The invalid response.
-                    PrintSimulatedResponse($"I'm sorry, {name}. I couldn't understand that question.", 50, ConsoleColor.Yellow, true);
+                    PrintSimulatedResponse($"I'm sorry, {name}. I couldn't understand that topic.", 30, ConsoleColor.Yellow);
+                    return false;
                 }
-
-                
             }
-            return false;
         }
 
         private void HandleWarning(string name)
@@ -145,7 +179,7 @@ namespace Cyber_Awareness_Chatbot.Interaction
                 if (c.Equals(' '))
                 {
                     // Display simulated dots.    
-                    PrintSimulatedResponse(dots, 200, ConsoleColor.Red, false);
+                    PrintSimulatedResponse(dots, 200, ConsoleColor.Red, false, false);
                 }
                 else
                 {
@@ -155,6 +189,7 @@ namespace Cyber_Awareness_Chatbot.Interaction
             }
             Environment.Exit(0);
         }
+
         // Overloaded methods so i can accept both string and char, and depending on which type is parsed differents actions will happen
         private void PrintSimulatedResponse(char c, int delay, ConsoleColor color)
         {
@@ -166,10 +201,15 @@ namespace Cyber_Awareness_Chatbot.Interaction
             Console.Write(c);
             // Reset color back to default.
             Console.ResetColor();
-
         }
-        private void PrintSimulatedResponse(string text, int delay, ConsoleColor color, Boolean newLine)
+
+        private void PrintSimulatedResponse(string text, int delay, ConsoleColor color, Boolean newLine = true, Boolean typingIndicator = true)
         {
+            if (typingIndicator)
+            {
+                ShowTypingIndicator(); // Show typing animation before response
+            }
+
             // Change the color of the text.
             Console.ForegroundColor = color;
             // Cycle through the give text.
@@ -194,6 +234,7 @@ namespace Cyber_Awareness_Chatbot.Interaction
 
         private void PrintResponse(string text, ConsoleColor color)
         {
+            ShowTypingIndicator(); // Show typing animation before response
             // Change the color of the text.
             Console.ForegroundColor = color;
             // Display the text.
@@ -202,20 +243,12 @@ namespace Cyber_Awareness_Chatbot.Interaction
             Console.ResetColor();
         }
 
-        public static string Base64Decode(string base64EncodedData)
-        {
-            // Convert the Base64 encoded string into a byte array.
-            byte[] base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
-            // Convert the byte array into a UTF-8 encoded string and return the result.
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
-        }
-
         public void DisplayBanner()
         {
             // Create a color scheme for the ASCII art.
             ConsoleColor[] colors = { ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Magenta };
             int index = 0;
-            
+
             // Cycle through the ASCII arts text.
             foreach (char c in Resources.hacker_logo)
             {
@@ -233,5 +266,49 @@ namespace Cyber_Awareness_Chatbot.Interaction
             Console.ResetColor();
             Console.WriteLine();
         }
+
+        private void ShowTypingIndicator()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            for (int i = 0; i < 3; i++)
+            {
+                Console.Write("\rBot is thinking" + new string('.', i + 1));
+                Thread.Sleep(300);
+            }
+            Console.ResetColor();
+            Console.WriteLine();
+        }
+
     }
-}
+
+} //        public void DisplayHeader()
+  //        {
+  //            string ascii = @"
+
+//   ▄████████     ███        ▄████████ ▄██   ▄        ▄█    █▄   ▄█     ▄██████▄   ▄█   ▄█          ▄████████ ███▄▄▄▄       ███     
+//  ███    ███ ▀█████████▄   ███    ███ ███   ██▄     ███    ███ ███    ███    ███ ███  ███         ███    ███ ███▀▀▀██▄ ▀█████████▄ 
+//  ███    █▀     ▀███▀▀██   ███    ███ ███▄▄▄███     ███    ███ ███▌   ███    █▀  ███▌ ███         ███    ███ ███   ███    ▀███▀▀██ 
+//  ███            ███   ▀   ███    ███ ▀▀▀▀▀▀███     ███    ███ ███▌  ▄███        ███▌ ███         ███    ███ ███   ███     ███   ▀ 
+//▀███████████     ███     ▀███████████ ▄██   ███     ███    ███ ███▌ ▀▀███ ████▄  ███▌ ███       ▀███████████ ███   ███     ███     
+//         ███     ███       ███    ███ ███   ███     ███    ███ ███    ███    ███ ███  ███         ███    ███ ███   ███     ███     
+//   ▄█    ███     ███       ███    ███ ███   ███     ███    ███ ███    ███    ███ ███  ███▌    ▄   ███    ███ ███   ███     ███     
+// ▄████████▀     ▄████▀     ███    █▀   ▀█████▀       ▀██████▀  █▀     ████████▀  █▀   █████▄▄██   ███    █▀   ▀█   █▀     ▄████▀   
+//                                                                                      ▀                                            
+//";
+
+//            // Create a color scheme for the ASCII art.
+//            ConsoleColor[] colors = { ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Magenta };
+//            int index = 0;
+
+//            // Cycle through the ASCII arts text.
+//            foreach (char c in ascii)
+//            {
+//                Console.ForegroundColor = colors[index % colors.Length];
+//                index++;
+//                Console.Write(c);
+//                // Reset color back to default.
+//                Console.ResetColor();
+//            }
+
+//            Console.WriteLine();
+//        }
