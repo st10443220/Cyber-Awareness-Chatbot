@@ -21,6 +21,7 @@ namespace Cyber_Awareness_Chatbot.Audio
 
             if (audio == null || audio.Length == 0)
             {
+                // Display an error message...
                 Debug.WriteLine("AudioManager Error: Attempted to play invalid audio data (null or empty).");
                 return; // Don't proceed if the input is obviously bad
             }

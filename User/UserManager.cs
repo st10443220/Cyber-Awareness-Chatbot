@@ -14,6 +14,7 @@ namespace Cyber_Awareness_Chatbot.User
             }
             set
             {
+                // Show error message if the value entered is Null or Empty (whitespace).
                 if (string.IsNullOrWhiteSpace(value))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -22,6 +23,7 @@ namespace Cyber_Awareness_Chatbot.User
                     return;
                 }
 
+                // Show message if the value exists in the badword list and show warning message.
                 if (Resources.curse_words.Split(',').Any(badword => value == badword))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -30,6 +32,7 @@ namespace Cyber_Awareness_Chatbot.User
                     return;
                 }
 
+                // Assign the value to the username if the value is valid.
                 _username = value;
             }
         }

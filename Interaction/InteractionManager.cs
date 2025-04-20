@@ -1,7 +1,13 @@
 ﻿using Cyber_Awareness_Chatbot.Properties;
+using System.Net.Http.Headers;
 
 /*
  * https://www.youtube.com/watch?v=YyD1MRJY0qI
+ * https://vslapp.wordpress.com/wp-content/uploads/2011/11/linq-cheatsheet.pdf
+ * https://stackoverflow.com/questions/1731704/how-to-find-a-first-value-in-a-dictionary
+ * https://stackoverflow.com/questions/498686/is-string-contains-faster-than-string-indexof
+ * https://www.fortinet.com/resources/cyberglossary/types-of-cyber-attacks
+ * https://learn.microsoft.com/en-us/dotnet/api/system.threading.thread.sleep?view=net-9.0
  */
 
 namespace Cyber_Awareness_Chatbot.Interaction
@@ -10,7 +16,7 @@ namespace Cyber_Awareness_Chatbot.Interaction
     {
         private Dictionary<string, string> Questions = new()
         {
-            { "you", @"Ask me about any of these topics:
+            { "help", @"Ask me about any of these topics:
 > Phishing
 > Scam
 > Malware
@@ -19,7 +25,33 @@ namespace Cyber_Awareness_Chatbot.Interaction
 > Password Safety
 > Suspicious Links
 > Internet Safety
-> Cybersecurity Threats" },{ "help", @"Ask me about any of these topics:
+> Cybersecurity Threats" },
+            { "how are you", "I'm functioning perfectly, thank you! I’m here to assist you with any cybersecurity-related questions, {name}." },
+            { "are you okay", "Yes, I’m operating smoothly! Let me know how I can assist you today, {name}." },
+            { "whats your purpose", "My purpose is to help you stay safe online by educating you about cybersecurity threats and best practices, {name}." },
+            { "what is your purpose", "I'm here to raise awareness about cyber threats and promote safer digital habits, {name}." },
+            { "why are you here", "I exist to assist you with learning about cybersecurity and how to protect yourself online, {name}." },
+            { "what can i ask you", @"Great question, {name}! You can ask me about:
+> Phishing
+> Scam
+> Malware
+> Social Engineering
+> Phishing Email
+> Password Safety
+> Suspicious Links
+> Internet Safety
+> Cybersecurity Threats" },
+            { "what do you know", @"I specialize in cybersecurity awareness. You can ask me about:
+> Phishing
+> Scam
+> Malware
+> Social Engineering
+> Phishing Email
+> Password Safety
+> Suspicious Links
+> Internet Safety
+> Cybersecurity Threats" },
+            { "topics", @"Here are the topics I can help you with:
 > Phishing
 > Scam
 > Malware
@@ -103,7 +135,7 @@ namespace Cyber_Awareness_Chatbot.Interaction
             }
 
             // Cycle through curseWords to see if the question contains any of them.
-            if (curseWords.Any(badword => question.Contains(badword)))
+            if (question.Split(" ").Any(word => curseWords.Contains(word)))
             {
                 // Display the appropriate warning.
                 HandleWarning(name);
@@ -126,8 +158,10 @@ namespace Cyber_Awareness_Chatbot.Interaction
             }
             else
             {
+                string[] leaveKeywords = { "exit", "leave", "goodbye", "bye" };
+
                 // Check to see if user wants to exit.
-                if (question.Split(" ").Any(text => text == "exit"))
+                if (question.Split(" ").Any(text => text.Split(" ").Any(word => leaveKeywords.Contains(word))))
                 {
                     PrintSimulatedResponse($"It's sad to see you go {name}... But goodluck on your journey and stay cyber safe!", 30, ConsoleColor.Magenta);
                     return true;
@@ -193,6 +227,8 @@ namespace Cyber_Awareness_Chatbot.Interaction
         // Overloaded methods so i can accept both string and char, and depending on which type is parsed differents actions will happen
         private void PrintSimulatedResponse(char c, int delay, ConsoleColor color)
         {
+            DisplaySectioner();
+
             // Change the color of the text.
             Console.ForegroundColor = color;
             // Add a simulated delay.
@@ -201,6 +237,8 @@ namespace Cyber_Awareness_Chatbot.Interaction
             Console.Write(c);
             // Reset color back to default.
             Console.ResetColor();
+
+            DisplaySectioner();
         }
 
         private void PrintSimulatedResponse(string text, int delay, ConsoleColor color, Boolean newLine = true, Boolean typingIndicator = true)
@@ -209,6 +247,8 @@ namespace Cyber_Awareness_Chatbot.Interaction
             {
                 ShowTypingIndicator(); // Show typing animation before response
             }
+
+            DisplaySectioner();
 
             // Change the color of the text.
             Console.ForegroundColor = color;
@@ -230,16 +270,30 @@ namespace Cyber_Awareness_Chatbot.Interaction
             {
                 Console.WriteLine();
             }
+
+            DisplaySectioner();
         }
 
         private void PrintResponse(string text, ConsoleColor color)
         {
             ShowTypingIndicator(); // Show typing animation before response
             // Change the color of the text.
+
+            DisplaySectioner();
+
             Console.ForegroundColor = color;
             // Display the text.
             Console.WriteLine(text);
             // Reset color back to default.
+            Console.ResetColor();
+
+            DisplaySectioner();
+        }
+
+        public void DisplaySectioner()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine("<------------------------------------------------------------------------------->");
             Console.ResetColor();
         }
 
@@ -247,7 +301,7 @@ namespace Cyber_Awareness_Chatbot.Interaction
         {
             // Create a color scheme for the ASCII art.
             ConsoleColor[] colors = { ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Magenta };
-            int index = 0;
+            int index = 0;  
 
             // Cycle through the ASCII arts text.
             foreach (char c in Resources.hacker_logo)
@@ -280,35 +334,4 @@ namespace Cyber_Awareness_Chatbot.Interaction
         }
 
     }
-
-} //        public void DisplayHeader()
-  //        {
-  //            string ascii = @"
-
-//   ▄████████     ███        ▄████████ ▄██   ▄        ▄█    █▄   ▄█     ▄██████▄   ▄█   ▄█          ▄████████ ███▄▄▄▄       ███     
-//  ███    ███ ▀█████████▄   ███    ███ ███   ██▄     ███    ███ ███    ███    ███ ███  ███         ███    ███ ███▀▀▀██▄ ▀█████████▄ 
-//  ███    █▀     ▀███▀▀██   ███    ███ ███▄▄▄███     ███    ███ ███▌   ███    █▀  ███▌ ███         ███    ███ ███   ███    ▀███▀▀██ 
-//  ███            ███   ▀   ███    ███ ▀▀▀▀▀▀███     ███    ███ ███▌  ▄███        ███▌ ███         ███    ███ ███   ███     ███   ▀ 
-//▀███████████     ███     ▀███████████ ▄██   ███     ███    ███ ███▌ ▀▀███ ████▄  ███▌ ███       ▀███████████ ███   ███     ███     
-//         ███     ███       ███    ███ ███   ███     ███    ███ ███    ███    ███ ███  ███         ███    ███ ███   ███     ███     
-//   ▄█    ███     ███       ███    ███ ███   ███     ███    ███ ███    ███    ███ ███  ███▌    ▄   ███    ███ ███   ███     ███     
-// ▄████████▀     ▄████▀     ███    █▀   ▀█████▀       ▀██████▀  █▀     ████████▀  █▀   █████▄▄██   ███    █▀   ▀█   █▀     ▄████▀   
-//                                                                                      ▀                                            
-//";
-
-//            // Create a color scheme for the ASCII art.
-//            ConsoleColor[] colors = { ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Magenta };
-//            int index = 0;
-
-//            // Cycle through the ASCII arts text.
-//            foreach (char c in ascii)
-//            {
-//                Console.ForegroundColor = colors[index % colors.Length];
-//                index++;
-//                Console.Write(c);
-//                // Reset color back to default.
-//                Console.ResetColor();
-//            }
-
-//            Console.WriteLine();
-//        }
+}
