@@ -22,6 +22,7 @@ namespace Cyber_Awareness_Chatbot.Audio
             if (audio == null || audio.Length == 0)
             {
                 // Display an error message...
+                Console.WriteLine("AudioManager Error: Attempted to play invalid audio data (null or empty).");
                 Debug.WriteLine("AudioManager Error: Attempted to play invalid audio data (null or empty).");
                 return; // Don't proceed if the input is obviously bad
             }
@@ -41,7 +42,8 @@ namespace Cyber_Awareness_Chatbot.Audio
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"AudioManager Error: Failed to play audio stream. Error: {e.Message}");
+                Console.WriteLine($"AudioManager Error: Failed to play audio stream.\n Error: {e.Message}");
+                Debug.WriteLine($"AudioManager Error: Failed to play audio stream.\n Error: {e.Message}");
             }
         }
     }

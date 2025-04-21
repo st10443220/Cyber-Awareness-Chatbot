@@ -1,5 +1,4 @@
 ﻿using Cyber_Awareness_Chatbot.Properties;
-using System.Net.Http.Headers;
 
 /*
  * https://www.youtube.com/watch?v=YyD1MRJY0qI
@@ -161,7 +160,7 @@ namespace Cyber_Awareness_Chatbot.Interaction
                 string[] leaveKeywords = { "exit", "leave", "goodbye", "bye" };
 
                 // Check to see if user wants to exit.
-                if (question.Split(" ").Any(text => text.Split(" ").Any(word => leaveKeywords.Contains(word))))
+                if (question.Split(" ").Any(word => leaveKeywords.Contains(word)))
                 {
                     PrintSimulatedResponse($"It's sad to see you go {name}... But goodluck on your journey and stay cyber safe!", 30, ConsoleColor.Magenta);
                     return true;
@@ -213,21 +212,24 @@ namespace Cyber_Awareness_Chatbot.Interaction
                 if (c.Equals(' '))
                 {
                     // Display simulated dots.    
-                    PrintSimulatedResponse(dots, 200, ConsoleColor.Red, false, false);
+                    PrintSimulatedResponse(dots, 200, ConsoleColor.Red, false, false, false);
                 }
                 else
                 {
                     // Display simulated text.
-                    PrintSimulatedResponse(c, 50, ConsoleColor.Yellow);
+                    PrintSimulatedResponse(c, 50, ConsoleColor.Yellow, false);
                 }
             }
             Environment.Exit(0);
         }
 
         // Overloaded methods so i can accept both string and char, and depending on which type is parsed differents actions will happen
-        private void PrintSimulatedResponse(char c, int delay, ConsoleColor color)
+        private void PrintSimulatedResponse(char c, int delay, ConsoleColor color, Boolean sectionHeader = true)
         {
-            DisplaySectioner();
+            if (sectionHeader)
+            {
+                DisplaySectioner();
+            }
 
             // Change the color of the text.
             Console.ForegroundColor = color;
@@ -238,17 +240,23 @@ namespace Cyber_Awareness_Chatbot.Interaction
             // Reset color back to default.
             Console.ResetColor();
 
-            DisplaySectioner();
+            if (sectionHeader)
+            {
+                DisplaySectioner();
+            }
         }
 
-        private void PrintSimulatedResponse(string text, int delay, ConsoleColor color, Boolean newLine = true, Boolean typingIndicator = true)
+        private void PrintSimulatedResponse(string text, int delay, ConsoleColor color, Boolean newLine = true, Boolean typingIndicator = true, Boolean sectionHeader = true)
         {
             if (typingIndicator)
             {
                 ShowTypingIndicator(); // Show typing animation before response
             }
 
-            DisplaySectioner();
+            if (sectionHeader)
+            {
+                DisplaySectioner();
+            }
 
             // Change the color of the text.
             Console.ForegroundColor = color;
@@ -271,13 +279,16 @@ namespace Cyber_Awareness_Chatbot.Interaction
                 Console.WriteLine();
             }
 
-            DisplaySectioner();
+            if (sectionHeader)
+            {
+                DisplaySectioner();
+            }
         }
 
-        private void PrintResponse(string text, ConsoleColor color)
+        private void PrintResponse(string text, ConsoleColor color, Boolean sectionHeader = true)
         {
             ShowTypingIndicator(); // Show typing animation before response
-            // Change the color of the text.
+                                   // Change the color of the text.
 
             DisplaySectioner();
 
@@ -292,6 +303,7 @@ namespace Cyber_Awareness_Chatbot.Interaction
 
         public void DisplaySectioner()
         {
+            // Display line to be used as a sectioner.
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine("<------------------------------------------------------------------------------->");
             Console.ResetColor();
@@ -301,7 +313,7 @@ namespace Cyber_Awareness_Chatbot.Interaction
         {
             // Create a color scheme for the ASCII art.
             ConsoleColor[] colors = { ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Magenta };
-            int index = 0;  
+            int index = 0;
 
             // Cycle through the ASCII arts text.
             foreach (char c in Resources.hacker_logo)
